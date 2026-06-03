@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Slider } from "@/components/ui/slider";
+import { Scrubber } from "@/components/ui/scrubber";
 import type { AnimationSlot } from "@/lib/lottie-player";
 
 /** Presentation metadata for a slot, loaded from /controls.json. */
@@ -81,26 +81,25 @@ export function PropertiesPanel({
             const min = m?.min ?? 0;
             const max = m?.max ?? 100;
             const step = m?.step ?? ((max - min) / 100 || 1);
+            // Show enough decimals to reflect the step (e.g. 0.01 → 2).
+            const decimals = Math.min(
+              4,
+              Math.max(0, -Math.floor(Math.log10(step)))
+            );
             return (
-              <div key={slot.id} className="flex flex-col gap-2">
-                <div className="flex items-baseline justify-between gap-2">
-                  <span className="text-sm">{label}</span>
-                  <span className="font-mono text-xs tabular-nums text-muted-foreground">
-                    {Number(value.toFixed(2))}
-                  </span>
-                </div>
-                <Slider
-                  min={min}
-                  max={max}
-                  step={step}
-                  value={[value]}
-                  onValueChange={([v]) => {
-                    set(slot.id, v);
-                    onScalar(slot.id, v);
-                  }}
-                  aria-label={label}
-                />
-              </div>
+              <Scrubber
+                key={slot.id}
+                label={label}
+                value={value}
+                min={min}
+                max={max}
+                step={step}
+                decimals={decimals}
+                onValueChange={(v) => {
+                  set(slot.id, v);
+                  onScalar(slot.id, v);
+                }}
+              />
             );
           }
 
