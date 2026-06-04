@@ -1,10 +1,6 @@
 {
   "controls": [
-    { "sid": "sparkleColor", "label": "Sparkle color" },
-    { "sid": "sparkleOpacity", "label": "Sparkle opacity", "min": 0, "max": 100, "step": 1 },
-    { "sid": "eyeColor", "label": "Eye color" },
-    { "sid": "eyeGlowColor", "label": "Eye glow" },
-    { "sid": "logoPosition", "label": "Logo position", "step": 1 },
-    { "sid": "captionText", "label": "Caption" }
+    { "sid": "ballColor", "label": "Ball color" },
+    { "sid": "ballOpacity", "label": "Ball opacity", "min": 0, "max": 100, "step": 1 }
   ]
 }
