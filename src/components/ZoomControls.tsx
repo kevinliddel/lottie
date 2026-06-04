@@ -17,7 +17,7 @@ export function ZoomControls({
   onReset,
 }: ZoomControlsProps) {
   return (
-    <Card className="pointer-events-auto flex-row items-center gap-0.5 rounded-lg p-1 backdrop-blur-md bg-card/80 border-border/60 shadow-lg">
+    <Card className="pointer-events-auto flex-row items-center gap-0.5 rounded-lg p-1 backdrop-blur-md bg-neutral-900/90 border border-border/5 shadow-lg">
       <Button variant="ghost" size="icon" className="size-7" onClick={onZoomOut} aria-label="Zoom out">
         <Minus />
       </Button>

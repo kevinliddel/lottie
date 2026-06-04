@@ -151,7 +151,7 @@ export function Scrubber({
         aria-valuemax={max}
         aria-valuemin={min}
         aria-valuenow={Number(value.toFixed(decimals))}
-        className="relative cursor-pointer overflow-hidden bg-muted outline-offset-2"
+        className="relative cursor-pointer overflow-hidden bg-accent/70 outline-offset-2"
         onKeyDown={handleKeyDown}
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
@@ -161,17 +161,17 @@ export function Scrubber({
         ref={trackRef}
         role="slider"
         style={{
-          height: 52,
-          borderRadius: 12,
+          height: 34,
+          borderRadius: 8,
           touchAction: "none",
         }}
         tabIndex={0}
       >
         {/* Fill indicator */}
         <div
-          className="pointer-events-none absolute inset-y-0 left-0 bg-foreground/14"
+          className="pointer-events-none absolute inset-y-0 left-0 bg-foreground/10"
           style={{
-            borderRadius: 12,
+            borderRadius: 8,
             width: `${percentage}%`,
             transition: isDragging
               ? "none"
@@ -223,8 +223,8 @@ export function Scrubber({
             }}
             className="bg-foreground/90"
             style={{
-              width: 5,
-              height: 34,
+              width: 4,
+              height: 20,
               borderRadius: 999,
             }}
             transition={springConfig}
@@ -232,26 +232,14 @@ export function Scrubber({
         </div>
 
         {/* Label */}
-        <div
-          className="pointer-events-none absolute top-1/2 left-[18px] -translate-y-1/2 whitespace-nowrap text-foreground"
-          style={{
-            fontSize: 17,
-            zIndex: 4,
-          }}
-        >
+        <div className="pointer-events-none absolute text-xs z-10 top-1/2 left-[12px] -translate-y-1/2 whitespace-nowrap text-foreground">
           {label}
         </div>
 
         {/* Value display */}
         <div
-          className="pointer-events-none absolute top-1/2 right-[14px] -translate-y-1/2 text-foreground"
-          style={{
-            zIndex: 4,
-            fontFamily: "ui-monospace, monospace",
-            fontVariantNumeric: "tabular-nums",
-            fontSize: 15,
-            fontWeight: 500,
-          }}
+          className="pointer-events-none absolute top-1/2 z-10 font-medium text-xs right-[14px] -translate-y-1/2 text-foreground font-mono"
+          style={{ fontVariantNumeric: "tabular-nums" }}
         >
           {value.toFixed(decimals)}
         </div>

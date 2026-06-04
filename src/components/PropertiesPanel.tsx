@@ -66,7 +66,7 @@ export function PropertiesPanel({
   );
 
   return (
-    <Card className="pointer-events-auto w-72 gap-0 py-4 bg-card/80 backdrop-blur-md border-border/60 shadow-lg">
+    <Card className="pointer-events-auto w-72 gap-0 py-4 backdrop-blur-md bg-neutral-900/90 border border-border/5 shadow-lg">
       <CardContent className="flex flex-col gap-5">
         <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
           Properties

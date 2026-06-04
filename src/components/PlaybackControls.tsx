@@ -26,13 +26,13 @@ export function PlaybackControls({
   const pad = String(max).length;
 
   return (
-    <Card className="pointer-events-auto w-full max-w-xl gap-0 py-3 backdrop-blur-md bg-card/80 border-border/60 shadow-lg">
-      <CardContent className="flex items-center gap-4">
+    <Card className="pointer-events-auto w-full max-w-xl gap-0 py-2 backdrop-blur-md bg-neutral-900/90 border border-border/5 shadow-lg">
+      <CardContent className="flex items-center p-0 h-full px-2 gap-3">
         <Button
-          variant="secondary"
           size="icon"
           onClick={onToggle}
           aria-label={playing ? "Pause" : "Play"}
+          className="size-7 rounded-sm"
         >
           {playing ? <Pause /> : <Play />}
         </Button>
@@ -53,8 +53,8 @@ export function PlaybackControls({
             {" / "}
             {max}
           </span>
-          <div className="h-5 w-px bg-muted-foreground/20" />
-          <span className="text-muted-foreground/70">{fps}FPS</span>
+          <div className="h-6 w-px bg-muted-foreground/15" />
+          <span className="text-muted-foreground/70 pr-2">{fps}FPS</span>
         </div>
       </CardContent>
     </Card>
