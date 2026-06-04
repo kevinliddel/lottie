@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Scrubber } from "@/components/ui/scrubber";
 import type { AnimationSlot } from "@/lib/lottie-player";
 import { Button } from "./ui/button";
@@ -28,6 +27,14 @@ export interface PropertiesPanelProps {
 function labelFor(slot: AnimationSlot, meta?: ControlMeta): string {
   return meta?.label ?? slot.id;
 }
+
+// Shared layout for the non-scrubber controls: a fixed-width plain-text label
+// column on the left, the field(s) filling the rest. The fixed LABEL width
+// keeps every control's field left-aligned down the panel.
+const ROW = "flex items-center gap-2";
+const LABEL = "w-24 shrink-0 truncate text-xs text-muted-foreground";
+const FIELD =
+  "h-[34px] rounded-md bg-accent/70 px-3 text-xs text-foreground outline-none focus-visible:bg-accent/90";
 
 // Color slots are RGBA 0..1; <input type="color"> works in #rrggbb hex, so we
 // convert at the boundary and carry the slot's alpha through untouched.
@@ -113,19 +120,20 @@ export function PropertiesPanel({
             if (slot.type === "color") {
               const value = values[slot.id] as [number, number, number, number];
               const hex = rgbToHex(value);
-              // Mirror the Scrubber's shell: a 34px rounded track with the
-              // swatch occupying a square at the left edge and the label beside
-              // it. The native color picker is overlaid transparently on the
-              // swatch so the whole square stays clickable.
+              // Label column on the left (plain text), then a field holding the
+              // swatch and its hex. The native picker is overlaid transparently
+              // so the whole field opens it.
               return (
-                <label
-                  key={slot.id}
-                  className="relative flex h-[34px] cursor-pointer select-none items-center overflow-hidden rounded-md bg-accent/70 pl-[6px]"
-                >
-                  <span
-                    className="relative size-6 shrink-0 rounded-[4px]"
-                    style={{ backgroundColor: hex }}
-                  >
+                <div key={slot.id} className={ROW}>
+                  <span className={LABEL}>{label}</span>
+                  <label className="relative flex h-[34px] flex-1 cursor-pointer select-none items-center gap-2 overflow-hidden rounded-md bg-accent/70 pl-[6px]">
+                    <span
+                      className="size-[22px] shrink-0 rounded-[4px]"
+                      style={{ backgroundColor: hex }}
+                    />
+                    <span className="font-mono text-xs uppercase text-foreground">
+                      {hex}
+                    </span>
                     <input
                       type="color"
                       value={hex}
@@ -138,9 +146,8 @@ export function PropertiesPanel({
                       className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
                       aria-label={label}
                     />
-                  </span>
-                  <span className="px-3 text-xs text-foreground">{label}</span>
-                </label>
+                  </label>
+                </div>
               );
             }
 
@@ -152,16 +159,18 @@ export function PropertiesPanel({
                 onVec2(slot.id, next);
               };
               return (
-                <div key={slot.id} className="flex flex-col gap-2">
-                  <span className="text-sm">{label}</span>
-                  <div className="flex gap-2">
+                <div key={slot.id} className={ROW}>
+                  <span className={LABEL}>{label}</span>
+                  <div className="flex flex-1 gap-2">
                     {([0, 1] as const).map((i) => (
-                      <Input
+                      <input
                         key={i}
                         type="number"
                         step={m?.step ?? 1}
                         value={value[i]}
                         onChange={(e) => update(i, Number(e.target.value))}
+                        className={`${FIELD} w-0 flex-1 font-mono [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none`}
+                        style={{ fontVariantNumeric: "tabular-nums" }}
                         aria-label={`${label} ${i === 0 ? "x" : "y"}`}
                       />
                     ))}
@@ -173,15 +182,16 @@ export function PropertiesPanel({
             // text
             const value = values[slot.id] as string;
             return (
-              <div key={slot.id} className="flex flex-col gap-2">
-                <span className="text-sm">{label}</span>
-                <Input
+              <div key={slot.id} className={ROW}>
+                <span className={LABEL}>{label}</span>
+                <input
                   type="text"
                   value={value}
                   onChange={(e) => {
                     set(slot.id, e.target.value);
                     onText(slot.id, e.target.value);
                   }}
+                  className={`${FIELD} min-w-0 flex-1`}
                   aria-label={label}
                 />
               </div>
