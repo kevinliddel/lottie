@@ -4,6 +4,8 @@ import { ControlMeta, AnimationSlot, Scene } from '@/types';
 import { useScenes } from '@/context/scenes';
 import { getCanvasKit } from '@/lib/canvaskit';
 import { loadScene } from '@/lib/scene';
+import { applySlotValues } from '@/lib/lottie';
+
 import type { CanvasKit, Surface, ManagedSkottieAnimation, Font, Paint, Typeface } from "canvaskit-wasm/full";
 
 const MIN_ZOOM = 0.1;
@@ -27,6 +29,7 @@ const CanvasContext = createContext<{
   setColorSlot(id: string, rgba: [number, number, number, number]): void;
   setVec2Slot(id: string, xy: [number, number]): void;
   setTextSlot(id: string, text: string): void;
+  commitSource(): void;
   togglePlayback(): void;
   seek(frame: number): void;
   zoomByCentered(factor: number): void;
@@ -42,6 +45,7 @@ export function CanvasProvider(props: { children: JSX.Element }) {
   let dragging = false;
   let lastTs = 0;
   let dirty = true;
+  let sourceDirty = false; // a control was edited but not yet written to source
 
   const observer = new ResizeObserver(() => resize());
   const params = useParams();
@@ -93,28 +97,7 @@ export function CanvasProvider(props: { children: JSX.Element }) {
 
   const slots = createMemo(() => {
     const anim = animation();
-    if (!anim) return [];
-    const info = anim.getSlotInfo();
-    const slots: AnimationSlot[] = [];
-    for (const id of info.scalarSlotIDs) {
-      slots.push({ id, type: "scalar", value: anim.getScalarSlot(id) ?? 0 });
-    }
-    for (const id of info.colorSlotIDs) {
-      const c = anim.getColorSlot(id);
-      slots.push({
-        id,
-        type: "color",
-        value: c ? [c[0], c[1], c[2], c[3]] : [0, 0, 0, 1],
-      });
-    }
-    for (const id of info.vec2SlotIDs) {
-      const v = anim.getVec2Slot(id);
-      slots.push({ id, type: "vec2", value: v ? [v[0], v[1]] : [0, 0] });
-    }
-    for (const id of info.textSlotIDs) {
-      slots.push({ id, type: "text", value: anim.getTextSlot(id)?.text ?? "" });
-    }
-    return slots;
+    return anim ? readSlots(anim) : [];
   });
 
   createEffect(() => {
@@ -157,6 +140,7 @@ export function CanvasProvider(props: { children: JSX.Element }) {
   const setScalarSlot = (id: string, value: number) => {
     animation()?.setScalarSlot(id, value);
     dirty = true;
+    sourceDirty = true;
   }
 
   const setColorSlot = (id: string, rgba: [number, number, number, number]) => {
@@ -164,11 +148,13 @@ export function CanvasProvider(props: { children: JSX.Element }) {
     if (!ck) return;
     animation()?.setColorSlot(id, ck.Color4f(rgba[0], rgba[1], rgba[2], rgba[3]));
     dirty = true;
+    sourceDirty = true;
   }
 
   const setVec2Slot = (id: string, xy: [number, number]) => {
     animation()?.setVec2Slot(id, xy);
     dirty = true;
+    sourceDirty = true;
   }
 
   const setTextSlot = (id: string, text: string) => {
@@ -180,7 +166,38 @@ export function CanvasProvider(props: { children: JSX.Element }) {
     current.text = text;
     anim.setTextSlot(id, new ck.SlottableTextProperty(current));
     dirty = true;
+    sourceDirty = true;
   }
+
+  const commitSource = async () => {
+    if (!sourceDirty) return;
+
+    const scene = currentScene();
+    const data = sceneData();
+    const anim = animation();
+    const project = params.project;
+    const sceneSlug = params.scene;
+    if (!scene || !data || !anim || !project || !sceneSlug) return;
+
+    let doc: Record<string, unknown>;
+    try {
+      doc = JSON.parse(data.json);
+    } catch {
+      return;
+    }
+    applySlotValues(doc, readSlots(anim));
+
+    const res = await fetch("/__scenes/lottie", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ project, scene: sceneSlug, doc }),
+    });
+    if (!res.ok) {
+      console.error(`Failed to save lottie source (HTTP ${res.status})`);
+    }
+
+    sourceDirty = false;
+  };
 
   const togglePlayback = () => setPlaying((v) => !v);
 
@@ -407,6 +424,7 @@ export function CanvasProvider(props: { children: JSX.Element }) {
         setColorSlot,
         setVec2Slot,
         setTextSlot,
+        commitSource,
         togglePlayback,
         seek,
         zoomByCentered,
@@ -426,6 +444,33 @@ export function useCanvas() {
     throw new Error('useCanvas must be used within a CanvasProvider');
   }
   return context;
+}
+
+// Snapshot the animation's current slot values. Reads straight off the
+// animation so callers always get the latest edits (the `slots` memo is only
+// recomputed when the animation itself changes).
+function readSlots(anim: ManagedSkottieAnimation): AnimationSlot[] {
+  const info = anim.getSlotInfo();
+  const slots: AnimationSlot[] = [];
+  for (const id of info.scalarSlotIDs) {
+    slots.push({ id, type: "scalar", value: anim.getScalarSlot(id) ?? 0 });
+  }
+  for (const id of info.colorSlotIDs) {
+    const c = anim.getColorSlot(id);
+    slots.push({
+      id,
+      type: "color",
+      value: c ? [c[0], c[1], c[2], c[3]] : [0, 0, 0, 1],
+    });
+  }
+  for (const id of info.vec2SlotIDs) {
+    const v = anim.getVec2Slot(id);
+    slots.push({ id, type: "vec2", value: v ? [v[0], v[1]] : [0, 0] });
+  }
+  for (const id of info.textSlotIDs) {
+    slots.push({ id, type: "text", value: anim.getTextSlot(id)?.text ?? "" });
+  }
+  return slots;
 }
 
 async function loadLabelTypeface(ck: CanvasKit): Promise<Typeface | null> {

@@ -222,6 +222,24 @@ export function scenesPlugin(): Plugin {
         json(res, 201, { project: projectSlug, scene: sceneSlug });
       });
 
+      // Overwrite a scene's lottie.json source. Body: { project, scene, doc }.
+      // This keeps `public/projects` the source of truth for control edits.
+      server.middlewares.use("/__scenes/lottie", async (req, res) => {
+        if (req.method !== "POST") return json(res, 405, { error: "method not allowed" });
+        const body = await readJsonBody(req);
+        const projectSlug = String(body.project ?? "");
+        const sceneSlug = String(body.scene ?? "");
+        const sceneDir = path.resolve(projectsDir, projectSlug, sceneSlug);
+        if (!sceneDir.startsWith(projectsDir + path.sep) || !fs.existsSync(sceneDir)) {
+          return json(res, 404, { error: "scene not found" });
+        }
+        const lottiePath = path.join(sceneDir, "lottie.json");
+        if (!fs.existsSync(lottiePath)) return json(res, 404, { error: "lottie.json not found" });
+        if (!body.doc || typeof body.doc !== "object") return json(res, 400, { error: "missing doc" });
+        fs.writeFileSync(lottiePath, JSON.stringify(body.doc, null, 2));
+        json(res, 200, { ok: true });
+      });
+
       server.middlewares.use("/__scenes", (_req, res) => {
         res.setHeader("Content-Type", "application/json");
         res.end(JSON.stringify(scanProjects(projectsDir)));
@@ -232,8 +250,11 @@ export function scenesPlugin(): Plugin {
         server.ws.send({ type: "custom", event: "scenes:update", data: scanProjects(projectsDir) });
       };
 
+      // Only structural events change the scenes tree; file content "change"
+      // events (e.g. saving control edits back to lottie.json) must not trigger
+      // a re-scan, or the active scene would reload on every auto-save.
       server.watcher.add(projectsDir);
-      for (const event of ["add", "unlink", "addDir", "unlinkDir", "change"] as const) {
+      for (const event of ["add", "unlink", "addDir", "unlinkDir"] as const) {
         server.watcher.on(event, notify);
       }
     },

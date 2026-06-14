@@ -1,9 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { createSignal, For, Show, type JSX } from "solid-js";
+import { useParams } from "@solidjs/router";
 import { useCanvas } from "@/context/canvas";
+import { useScenes } from "@/context/scenes";
 import { NumericSlider } from "@/components/ui/numeric-slider";
 import { Icon } from "@/components/ui/icon";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { exportProjectZip } from "@/lib/export";
 
 import type { AnimationSlot } from "@/types";
 
@@ -24,7 +27,9 @@ function hexToRgb(hex: string): [number, number, number] {
 }
 
 export function SidebarRight() {
-  const { slots, zoom, controls, setScalarSlot, setColorSlot, setVec2Slot, setTextSlot, zoomByCentered, resetCamera } = useCanvas();
+  const { slots, zoom, controls, setScalarSlot, setColorSlot, setVec2Slot, setTextSlot, commitSource, zoomByCentered, resetCamera } = useCanvas();
+  const params = useParams();
+  const { findProject } = useScenes();
   const [edits, setEdits] = createSignal<Record<string, AnimationSlot["value"]>>({});
 
   const set = (id: string, value: AnimationSlot["value"]) =>
@@ -33,13 +38,8 @@ export function SidebarRight() {
   const valueOf = (s: AnimationSlot) => edits()[s.id] ?? s.value;
 
   const handleExport = async () => {
-    const res = await fetch('/lottie.json');
-    if (!res.ok) {
-      throw new Error(`Failed to load /lottie.json (HTTP ${res.status})`);
-    }
-
-    const values = Object.fromEntries(slots().map((s) => [s.id, valueOf(s)]));
-    downloadConfiguredLottie(await res.text(), slots(), values);
+    const project = params.project ? findProject(params.project) : undefined;
+    if (project) await exportProjectZip(project);
   };
 
   return (
@@ -94,6 +94,7 @@ export function SidebarRight() {
                         set(slot.id, v);
                         setScalarSlot(slot.id, v);
                       }}
+                      onDragEnd={commitSource}
                     />
                   </Slot>
                 );
@@ -124,6 +125,7 @@ export function SidebarRight() {
                           set(slot.id, rgba);
                           setColorSlot(slot.id, rgba);
                         }}
+                        onBlur={commitSource}
                         class="absolute inset-0 h-full w-full cursor-pointer opacity-0"
                         aria-label={label}
                       />
@@ -148,6 +150,7 @@ export function SidebarRight() {
                           step={m?.step ?? 1}
                           value={value[i]}
                           onChange={(e) => update(i, Number(e.target.value))}
+                          onBlur={commitSource}
                           class="rounded-md bg-input font-sans text-foreground outline-none w-0 flex-1 text-xxs h-7 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none px-2 focus-ring"
                         />
                       ))}
@@ -167,6 +170,7 @@ export function SidebarRight() {
                       set(slot.id, e.target.value);
                       setTextSlot(slot.id, e.target.value);
                     }}
+                    onBlur={commitSource}
                     class="rounded-md bg-input font-sans text-foreground outline-none w-0 flex-1 text-xxs h-7 px-2 focus-ring"
                     aria-label={label}
                   />
@@ -179,35 +183,6 @@ export function SidebarRight() {
       </Show>
     </div>
   );
-}
-
-function downloadConfiguredLottie(
-  lottieJson: string,
-  slots: AnimationSlot[],
-  values: Record<string, AnimationSlot["value"]>
-) {
-  const doc = JSON.parse(lottieJson) as {
-    slots?: Record<string, { p?: { k?: unknown; p?: { t?: string } } }>;
-  };
-
-  for (const slot of slots) {
-    const def = doc.slots?.[slot.id]?.p;
-    if (!def) continue;
-    const value = values[slot.id] ?? slot.value;
-    if (slot.type === "text") {
-      if (def.p) def.p.t = value as string;
-    } else {
-      def.k = value;
-    }
-  }
-
-  const blob = new Blob([JSON.stringify(doc)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "lottie.json";
-  a.click();
-  URL.revokeObjectURL(url);
 }
 
 type SlotProps = {

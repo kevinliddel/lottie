@@ -1,4 +1,9 @@
 @import 'tailwindcss';
+/* Keep Tailwind's automatic source detection out of the Lottie source files
+   under public/projects. They hold arbitrary strings and are rewritten on every
+   control auto-save; left in scope Tailwind would regenerate index.css on each
+   save (a CSS HMR churn that can cascade into a full page reload). */
+@source not "../public/projects";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/inter";
