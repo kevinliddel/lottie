@@ -1,10 +1,11 @@
 import { Accessor, createContext, createEffect, createResource, createMemo, createSignal, onCleanup, onMount, Resource, untrack, useContext, type JSX } from 'solid-js';
-import { useParams, useSearchParams } from "@solidjs/router";
+import { useNavigate, useParams, useSearchParams } from "@solidjs/router";
 import { ControlMeta, AnimationSlot, Scene } from '@/types';
 import { useScenes } from '@/context/scenes';
 import { getCanvasKit } from '@/lib/canvaskit';
 import { loadScene } from '@/lib/scene';
 import { applySlotValues } from '@/lib/lottie';
+import { parseLottieFile, createSceneFromDoc } from '@/lib/import';
 
 import type { CanvasKit, Surface, ManagedSkottieAnimation, Font, Paint, Typeface } from "canvaskit-wasm/full";
 
@@ -49,6 +50,7 @@ export function CanvasProvider(props: { children: JSX.Element }) {
 
   const observer = new ResizeObserver(() => resize());
   const params = useParams();
+  const navigate = useNavigate();
   const { findScene } = useScenes();
   const [searchParams] = useSearchParams();
   const [playing, setPlaying] = createSignal(false);
@@ -310,6 +312,32 @@ export function CanvasProvider(props: { children: JSX.Element }) {
     seek(Math.min(Math.round(currentFrame()) + step, last));
   };
 
+  // Accept a Lottie file dragged onto the canvas, but only when files are being
+  // dragged (ignore in-app drags) — preventDefault enables the drop.
+  const onDragOver = (e: DragEvent) => {
+    if (!e.dataTransfer || !Array.from(e.dataTransfer.items).some((i) => i.kind === "file")) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "copy";
+  };
+
+  // Drop a .json/.lottie file to add it as a new scene (next index), then open it.
+  const onDrop = async (e: DragEvent) => {
+    const file = e.dataTransfer?.files?.[0];
+    const name = file?.name.toLowerCase() ?? "";
+    if (!file || (!name.endsWith(".json") && !name.endsWith(".lottie"))) return;
+    e.preventDefault();
+
+    const project = params.project;
+    if (!project) return;
+    try {
+      const doc = await parseLottieFile(file);
+      const { project: proj, scene } = await createSceneFromDoc(project, doc);
+      navigate(`/${proj}/${scene}`);
+    } catch (err) {
+      console.error("Failed to import dropped Lottie file:", err);
+    }
+  };
+
   const resetCamera = () => {
     const anim = animation();
     if (!anim) return;
@@ -399,6 +427,8 @@ export function CanvasProvider(props: { children: JSX.Element }) {
     canvas.addEventListener("wheel", onWheel, { passive: false });
     canvas.addEventListener("pointerdown", onPointerDown);
     canvas.addEventListener("dblclick", resetCamera);
+    canvas.addEventListener("dragover", onDragOver);
+    canvas.addEventListener("drop", onDrop);
     window.addEventListener("pointermove", onPointerMove);
     window.addEventListener("pointerup", onPointerUp);
     window.addEventListener("keydown", onKeyDown);
@@ -419,6 +449,8 @@ export function CanvasProvider(props: { children: JSX.Element }) {
     canvas.removeEventListener("wheel", onWheel);
     canvas.removeEventListener("pointerdown", onPointerDown);
     canvas.removeEventListener("dblclick", resetCamera);
+    canvas.removeEventListener("dragover", onDragOver);
+    canvas.removeEventListener("drop", onDrop);
     window.removeEventListener("pointermove", onPointerMove);
     window.removeEventListener("pointerup", onPointerUp);
     window.removeEventListener("keydown", onKeyDown);
