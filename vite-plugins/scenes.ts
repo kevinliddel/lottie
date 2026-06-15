@@ -263,6 +263,11 @@ export function scenesPlugin(): Plugin {
   let projectsDir = "";
   let live: LiveState | null = null; // latest browser playback snapshot
 
+  // Exact content of the last lottie.json the plugin wrote per path. Used to
+  // tell the browser's own auto-save write-backs (echoes, to be ignored) apart
+  // from external edits (e.g. the agent), which should trigger a live reload.
+  const selfWrites = new Map<string, string>();
+
   return {
     name: "scenes-discovery",
 
@@ -337,7 +342,9 @@ export function scenesPlugin(): Plugin {
         const lottiePath = path.join(sceneDir, "lottie.json");
         if (!fs.existsSync(lottiePath)) return json(res, 404, { error: "lottie.json not found" });
         if (!body.doc || typeof body.doc !== "object") return json(res, 400, { error: "missing doc" });
-        fs.writeFileSync(lottiePath, JSON.stringify(body.doc, null, 2));
+        const serialized = JSON.stringify(body.doc, null, 2);
+        selfWrites.set(lottiePath, serialized); // mark as our own write so the watcher ignores the echo
+        fs.writeFileSync(lottiePath, serialized);
         json(res, 200, { ok: true });
       });
 
@@ -380,6 +387,23 @@ export function scenesPlugin(): Plugin {
       for (const event of ["add", "unlink", "addDir", "unlinkDir"] as const) {
         server.watcher.on(event, notify);
       }
+
+      // Content edits to a scene's lottie.json: reload just that scene in the
+      // browser. The browser's own auto-saves are filtered out by comparing
+      // against the exact bytes the plugin last wrote, so only external edits
+      // (e.g. the agent rewriting the file) reach the client.
+      server.watcher.on("change", (file) => {
+        if (!file.startsWith(projectsDir) || path.basename(file) !== "lottie.json") return;
+        let content: string;
+        try {
+          content = fs.readFileSync(file, "utf8");
+        } catch {
+          return;
+        }
+        if (selfWrites.get(file) === content) return; // echo of our own save — ignore
+        const rel = path.relative(projectsDir, file).split(path.sep).join("/");
+        server.ws.send({ type: "custom", event: "scene:source", data: { lottie: `/projects/${rel}` } });
+      });
     },
 
     generateBundle() {

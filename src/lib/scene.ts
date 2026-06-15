@@ -6,7 +6,7 @@ export interface SceneData {
 }
 
 export async function loadScene(scene: Scene): Promise<SceneData> {
-  const res = await fetch(scene.lottie);
+  const res = await fetch(scene.lottie, { cache: "no-store" });
   if (!res.ok) {
     throw new Error(`Failed to load ${scene.lottie} (HTTP ${res.status})`);
   }

@@ -61,7 +61,16 @@ export function CanvasProvider(props: { children: JSX.Element }) {
     if (!project || !scene) return null;
     return findScene(project, scene) ?? null;
   });
-  const [sceneData] = createResource(currentScene, loadScene);
+  const [sceneData, { refetch: refetchScene }] = createResource(currentScene, loadScene);
+
+  onMount(() => {
+    import.meta.hot?.on("scene:source", (data: { lottie: string }) => {
+      if (currentScene()?.lottie === data.lottie) {
+        refetchScene();
+      }
+    });
+  });
+
   const [controls] = createResource(currentScene, loadControlsMeta);
   const [labelTypeface] = createResource(canvasKit, loadLabelTypeface);
   const [camera, setCamera] = createSignal({
