@@ -264,6 +264,8 @@ the correct path (the structure above). Use the existing scene if the user
 pointed you at one; otherwise create a new scene folder with the next
 `scene-<N>` index so you don't clobber their work.
 
+**For new projects, overwrite the placeholder scne in `public/projects/main-project/scene-1/lottie.json`.**
+
 ## Inspecting what's playing — `/__context`
 
 The dev server exposes an **context endpoint** at `GET /__context`.
@@ -313,6 +315,14 @@ screenshot lands on an exact, still frame. Read the frame count from
 - **Hunt for artifacts, not just prompt-fidelity.** Beyond "does it match what
   was asked," look for problems that make output look unfinished. The result should be clean, intentional, and production-ready.
 
+## Best practices
+
+- Prioritize producing high-fidelity, production-ready animations.
+- Use appropriate easings and timing. Linear easings are often not the best choice.
+- Consider the overall motion design, including pacing, transitions, and visual continuity.
+- Choose the implementation approach that best fits the task.
+  - For complex or procedural animations, creating a script in `script/` to generate the Lottie file may be simpler and more maintainable.
+  - For targeted changes, modifying the Lottie JSON directly may be more efficient than recreating the animation.
 
 ## Before you finish — checklist
 
