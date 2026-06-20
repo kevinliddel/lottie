@@ -17,6 +17,11 @@ textures, and simple chart animations.
 - The headline should state the insight; the chart or figure confirms it.
 - Use one semantic accent against neutral, two values of one hue, or one
   saturated hue per card.
+- Default to borderless figures in negative space, or even self-contained cards.
+  Do not wrap a stat triad in an extra outer framing card or border unless the
+  user asks. Use exactly one surface tone; never stack two near-black or
+  near-white tints. If columns need separation, use one hairline of one color
+  between equal columns only, and prefer whitespace first.
 - Count up figures with baked keyframes and tabular numerals unless the prompt
   asks for static text.
 - Use slotted background for full-frame data scenes; transparent only when the
@@ -68,6 +73,12 @@ textures, and simple chart animations.
 - Rainbow chart color decorates instead of teaching.
 - Too many metrics compete in one beat.
 - Serious data uses bouncy or theatrical motion.
+- An unnecessary outer framing card or border wraps the stat group when
+  whitespace and alignment would carry it.
+- Multiple dividers use slightly different colors or weights (for example a title
+  underline plus column rules that do not match).
+- Two stacked near-black or near-white tints read as a muddy box instead of one
+  clean surface.
 - Dashboard mock looks dense but the state is incoherent.
 - Rounded bars/cards stretch because they were scaled instead of revealed.
 - Label and value in a row share a baseline, so the smaller label sinks below the
@@ -85,6 +96,9 @@ textures, and simple chart animations.
 - Stacked label/figure spacing and row-to-row spacing follow a consistent rhythm.
 - Chart geometry and numeric labels resolve together.
 - Palette uses semantic color, not decorative color.
+- No outer framing card or border unless it does a job whitespace cannot; any
+  dividers are a single hairline and one color between equal columns; exactly one
+  surface tone is used; hierarchy still reads with all chrome removed.
 - Final frame works as a clear still data slide.
 - Motion adds comprehension and does not overdramatize serious data.
 - Counters, masks, trim paths, and rounded reveals are Skottie-safe.

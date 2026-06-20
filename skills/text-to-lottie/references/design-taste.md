@@ -69,6 +69,10 @@ not clear, the design will usually drift toward generic shapes.
   evenly weighted, or hard to read.
 - When the scene feels generic, first strengthen the focal subject, spacing,
   typography, and color roles. Add effects only after the composition holds.
+- "Premium" most often fails by adding chrome: a framing card, a border, column
+  dividers, a second surface tint, or a gradient. Treat the word as a cue to
+  subtract. Strengthen scale, weight, brightness, and spacing first; reach for a
+  container only if removing it would lose meaning.
 
 ## Primitive Systems
 
@@ -168,6 +172,18 @@ not clear, the design will usually drift toward generic shapes.
 - Do not let multiple accents compete for the same level of attention.
 - Use tonal steps, hairlines, and brightness ramps for depth before shadows,
   glow, glass, or blur.
+- Chrome/container budget is `0` by default. A framing card, container, border,
+  or divider must do a job that whitespace and alignment cannot, or it is
+  removed. Separate grids and columns with negative space and alignment first, a
+  single hairline second, and a filled or bordered card last. Carry hierarchy
+  with type weight, scale, brightness, and grouping, not with chrome.
+- Use one surface tone. Do not stack two near-black or two near-white tints to
+  fake a "surface"; layered low-contrast darks (or lights) read as a muddy box.
+  If a card surface must differ from the background, make it one deliberate step
+  with a clear purpose, not an arbitrary second tint.
+- If dividers are genuinely needed, use one weight and one color for all of them,
+  the title rule and any column rules included. Slightly different divider or
+  border colors per element is a classic low-taste tell.
 - Avoid muddy gradients, arbitrary glows, and decorative effects that reduce
   legibility.
 - When using glass/metal/glow effects, keep the base composition readable with
@@ -180,6 +196,11 @@ not clear, the design will usually drift toward generic shapes.
 - Pick the layout by the data job: hero figure, KPI grid, stat-card triad,
   comparison chart, progress card, dashboard metric, social proof, or heat map.
 - Big figures should lead with extreme figure-to-label scale contrast.
+- Default a stat triad to either even self-contained cards or borderless figures
+  floating in negative space, separated by whitespace. Do not wrap the group in
+  an extra outer framing card, and do not put dividers between the columns unless
+  whitespace alone fails; if they are needed, use one hairline of one color
+  between equal columns only.
 - Direct-label values. Avoid forcing viewers to decode axes, legends, or chart
   clutter.
 - Use one semantic accent against neutral, two values of one hue, or one
@@ -255,3 +276,16 @@ not clear, the design will usually drift toward generic shapes.
   elements before adding decoration, cards, glow, or extra detail.
 - If the review fails, revise the composition and recheck the affected frames
   before finishing.
+
+### Premium Restraint Checklist
+
+Run this scan on any premium/clean/minimal/card scene before finishing:
+
+- Zero unnecessary chrome: no framing card, border, or divider that whitespace
+  and alignment could replace.
+- Exactly one surface tone: no two stacked near-black or near-white tints.
+- One divider treatment and one color, if any divider exists at all.
+- Hierarchy reads from scale, weight, brightness, and spacing with all chrome
+  removed.
+- For each card, border, or divider present: would removing it lose meaning? If
+  not, remove it.

@@ -47,6 +47,7 @@ inline rules in this file.
 | Glow, glass, metal, gradient, fill, bubble/burst effects | `references/recipe-visual-effects.md`, `references/design-taste.md`, `references/motion-taste.md` |
 | SVG input inside logo/icon/UI/lower-third work | The task recipe plus `references/svg-compatibility.md` |
 | Starter brief or reusable project direction | `references/recipe-starter-projects.md`, `references/design-taste.md`, `references/motion-taste.md` |
+| Any "premium", "clean", "minimal", "modern", "sleek", or "polished" qualifier | `references/design-taste.md` (restraint defaults), plus the routed recipe |
 
 For mixed prompts, choose one primary recipe from the main deliverable, then add
 secondary references for source format or visual treatment. Examples: SVG logo
@@ -69,6 +70,30 @@ kinetic title with glass sweep uses typography plus visual effects.
    `?frame=N`, and fix render/design/motion issues before finishing.
 
 ## Inline Rules
+
+### Design Defaults (always apply)
+
+These few defaults are non-negotiable and apply to every designed scene. Load
+`references/design-taste.md` for the full reasoning, especially for any
+"premium", "clean", "minimal", "modern", or "card" prompt.
+
+- Premium means subtract, not add. When a prompt says premium, clean, minimal,
+  modern, sleek, or sophisticated, default to restraint: remove chrome before
+  adding it. Premium is carried by scale, weight, brightness, spacing, and
+  timing, never by cards, borders, dividers, shadows, glow, or stacked tints.
+- Chrome/container budget is `0` by default. Do not add a framing card,
+  container, border, or divider unless it does a job that whitespace and
+  alignment cannot. Separate grids and columns with negative space and alignment
+  first, a single hairline second, and a filled or bordered card last and only
+  when explicitly warranted.
+- One surface tone. Use one background tone. Do not stack two near-black or two
+  near-white tints to fake a "surface"; it reads muddy. If a card surface must
+  differ from the background, make it one deliberate step with a clear purpose.
+- One divider treatment, one color. If dividers are truly needed, use one weight
+  and one color for all of them, title rule and column rules included. Never use
+  slightly different colors or weights per divider.
+
+### Scene Rules
 
 - Scene files live at `public/projects/<project>/<scene-N>/lottie.json`.
 - Use a target named by the user, the active scene from `GET /__context`, or a

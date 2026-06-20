@@ -94,6 +94,14 @@ normal animation work.
   or hierarchy.
 - Fail scenes where hierarchy depends on cards, shadows, glow, or chrome before
   scale, weight, brightness, spacing, and timing have been resolved.
+- Fail an unnecessary outer framing card or border around a stat group or column
+  set when whitespace and alignment would carry it.
+- Fail dividers that use more than one color or weight (for example a title rule
+  that does not match the column rules).
+- Fail two stacked near-black or near-white tints that read as a muddy surface
+  instead of one clean background tone.
+- Fail "premium", "clean", or "minimal" prompts answered by adding chrome (a
+  card, border, divider, or second surface tint) instead of by subtracting.
 - If design QA fails, the agent should simplify and revise before calling the
   task complete.
 
@@ -114,6 +122,9 @@ normal animation work.
 - Serious data uses calm ease-out and no bounce.
 - Chartjunk, decorative 3D, rainbow series, and incoherent dashboard density are
   blockers unless the prompt explicitly asks for them.
+- Stat triads default to borderless figures or even self-contained cards
+  separated by whitespace: no outer framing card, one surface tone, and at most a
+  single hairline of one color between equal columns.
 
 ## Motion And Loop Quality
 
@@ -182,6 +193,9 @@ normal animation work.
   exact Skottie rendering."
 - "Animate a product UI flow that feels believable, not crowded."
 - "Animate these three KPIs into a premium stat card."
+- "Create a premium KPI stat card with three metrics and restrained motion."
+  (Regression: a terse "premium" prompt must subtract chrome, not add a framing
+  card, mismatched dividers, or stacked muddy tints.)
 - "Create a pitch-slide chart showing revenue growing 11% month over month."
 - "Make a generative loader from one repeated dot primitive."
 - "Create a clean ambient background behind a headline, no generic particles."

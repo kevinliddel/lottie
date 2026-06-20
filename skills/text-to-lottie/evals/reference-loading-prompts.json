@@ -157,5 +157,27 @@
       "references/recipe-svg-animation.md",
       "references/recipe-diagram-technical.md"
     ]
+  },
+  {
+    "query": "Create a premium KPI stat card with three metrics and restrained motion.",
+    "must_read": [
+      "references/player-contract.md",
+      "references/recipe-data-stats.md",
+      "references/design-taste.md",
+      "references/motion-taste.md"
+    ],
+    "may_read": [
+      "references/lottie-spec-map.md"
+    ],
+    "must_not_read": [
+      "references/recipe-typography.md",
+      "references/recipe-diagram-technical.md",
+      "references/recipe-product-promo.md"
+    ],
+    "expected_behavior": [
+      "read the restraint defaults in design-taste.md because the prompt says premium",
+      "default to borderless figures or even self-contained cards separated by whitespace",
+      "no outer framing card, one surface tone, and at most a single hairline of one color between equal columns"
+    ]
   }
 ]
