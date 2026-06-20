@@ -18,6 +18,7 @@ matters.
 - Brand-System Grammar
 - Background And Generative Fields
 - Production Polish
+- Final Design Review
 
 ## Design Decision Loop
 
@@ -205,6 +206,10 @@ not clear, the design will usually drift toward generic shapes.
 ## Production Polish
 
 - Check frame `0`, midpoint, and the final frame as design compositions.
+- Treat first, midpoint, and final frames as the minimum still-frame check. For
+  scenes with major semantic beats, also inspect the frames where a word lands,
+  number resolves, logo locks up, chart completes, CTA appears, or camera move
+  settles.
 - The final frame should have one clear focal subject, readable support, and
   intentional negative space.
 - The final frame should feel visually finished, not merely like the last
@@ -218,3 +223,21 @@ not clear, the design will usually drift toward generic shapes.
 - Treat unresolved hierarchy, crowded detail, weak typography, color overload,
   or a poor final still as blockers. Revise the scene before considering it
   complete.
+
+## Final Design Review
+
+- Check focal point first: the viewer should know where to look before reading
+  support labels or noticing accents.
+- Check placement and spacing: margins, optical centering, baseline alignment,
+  line breaks, and object spacing should feel deliberate at rest and during
+  motion.
+- Check hierarchy: scale, weight, brightness, spacing, and timing should make
+  primary, support, and accent roles obvious.
+- Check typography: line breaks, rag, casing, weight, tracking, and label
+  placement should support the message rather than fill available space.
+- Check color roles: each saturated or high-contrast color should indicate
+  brand, state, category, comparison, or focus.
+- Check object necessity: remove, merge, resize, clarify, or rebalance weak
+  elements before adding decoration, cards, glow, or extra detail.
+- If the review fails, revise the composition and recheck the affected frames
+  before finishing.

@@ -17,6 +17,7 @@ Use this reference when choosing pacing, easings, staging, or animation style.
 - Loop And Generative Motion
 - Style Presets
 - Render-Aware Motion
+- Final Motion Review
 - Checks
 
 ## Principles
@@ -171,6 +172,25 @@ Use this reference when choosing pacing, easings, staging, or animation style.
   replacements, or crossfades.
 - Cap dense fields and verify performance. Repeater-based fields cannot assume
   independent per-instance animation.
+
+## Final Motion Review
+
+- Scrub playback. First and last frames alone are not enough to judge timing,
+  stagger, readability, or settle quality.
+- Inspect key beat frames: frame `0`, early reveal or first meaningful beat,
+  midpoint, settle or near-final, `op - 1`, loop seam if looping, and semantic
+  beats where a number resolves, word lands, logo lockup forms, chart finishes
+  drawing, CTA appears, or camera move settles.
+- Check beat order: the focal subject should lead, support should follow, and
+  accents should not steal the read.
+- Check stagger origin and spacing: repeated elements should begin from the
+  meaningful source, path direction, reading order, or focal point.
+- Check timing and easing: entrances should feel intentional, not uniform;
+  settles should land cleanly without drift, snap-back, or accidental float.
+- Check readability during motion: text, data, icons, and UI states should be
+  parseable at the moments they matter.
+- If motion feels busy or hides weak layout, simplify the visual structure or
+  reduce animated properties before adding more choreography.
 
 ## Checks
 

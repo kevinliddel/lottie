@@ -36,6 +36,11 @@ normal animation work.
 ## Motion And Design Quality
 
 - Frame `0`, midpoint, and `op - 1` are visually intentional.
+- First, midpoint, and final frames are the minimum still-frame check, not the
+  full motion review.
+- Motion work also inspects playback and pinned key beat frames: early reveal,
+  midpoint, settle or near-final, final frame, loop seam if looping, and semantic
+  beats where text, data, logo, chart, CTA, or camera motion resolves.
 - Final frame works as a still composition or poster frame.
 - Design quality is a completion blocker. A scene that parses and renders still
   fails if hierarchy, spacing, color restraint, object necessity, or final-frame
@@ -67,6 +72,8 @@ normal animation work.
 ## Design Judgment Blockers
 
 - Fail outputs that render correctly but have no clear focal subject.
+- Fail outputs that rely on first/last-frame inspection when the animation has
+  meaningful motion, stagger, camera movement, looping, or semantic beat changes.
 - Fail crowded compositions, even when individual details appear meaningful.
 - Fail scenes where support elements compete with the main message.
 - Fail weak final frames that feel like accidental stopping points.
@@ -104,8 +111,14 @@ normal animation work.
 - Repeated elements use reading-order stagger or phase offsets unless lockstep
   is intentional.
 - Reveals follow build, settle, hold, with support arriving after the hero.
+- Beat order, stagger origin, timing, easing, settle/hold, camera/framing, and
+  readability are reviewed by scrubbing playback, not only by checking static
+  endpoints.
 - Loops have engineered seams: matched endpoints, integer cycles, wrapped drift,
   closed rotation, or recycled emanation.
+- Loop seams are inspected when applicable; semantic beat frames are inspected
+  when numbers resolve, words land, logo lockups form, charts complete, CTAs
+  appear, or camera moves settle.
 - Ambient/generative motion has one conceptual beat and remains subordinate
   unless the field itself is the deliverable.
 - Motion reveals value and meaning; it does not animate chrome to compensate for

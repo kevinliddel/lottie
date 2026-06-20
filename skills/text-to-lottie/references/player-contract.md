@@ -147,3 +147,23 @@ Slot types must match the properties that reference them.
   `op - 1`.
 - Fix blank canvas, missing assets, unstyled shapes, wrong layer order, bad
   easing, cropped content, text overflow, and SVG artifacts before finishing.
+
+## Final Review Passes
+
+Run lightweight render, design, and motion reviews before calling a scene
+complete. First, midpoint, and final frames are the minimum still-frame check,
+not a substitute for motion review.
+
+- Render review: validate JSON, confirm `/__context`, verify assets load, and
+  inspect pinned frames in the official player.
+- Design review: inspect frame `0`, midpoint, `op - 1`, and any major semantic
+  still. Check focal point, placement, spacing, hierarchy, typography, color
+  roles, object necessity, and final-frame strength.
+- Motion review: scrub playback and inspect key beat frames: frame `0`, early
+  reveal, midpoint, settle or near-final, `op - 1`, loop seam if looping, and
+  semantic beats where a number resolves, word lands, logo lockup forms, chart
+  finishes drawing, CTA appears, or camera move settles.
+- Check beat order, stagger origin, timing, easing, settle/hold, loop seam,
+  camera/framing, and readability during motion.
+- If design or motion review fails, simplify and revise before finishing. A
+  valid render is not enough.
