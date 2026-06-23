@@ -161,10 +161,11 @@ not clear, the design will usually drift toward generic shapes.
 ## Color And Material
 
 - Start from source/brand colors when provided.
+- When no brand system is provided, prefer a premium pure black/white
+  (`000`/`fff`) contrast or another deliberate premium palette; use warm
+  near-black and cream/off-white tones only when the user asks for them.
 - Use one dominant neutral or background, one primary color, and one accent
   unless the concept demands more.
-- Prefer warm near-black and cream/off-white over pure black/white when no
-  brand system is provided and the scene should feel premium.
 - Assign color roles before adding new colors: background/neutral, focal
   subject, accent, and optional semantic state.
 - Quarantine saturation to one expressive element, or make every color teach a
