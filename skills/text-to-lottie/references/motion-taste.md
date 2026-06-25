@@ -9,6 +9,7 @@ Use this reference when choosing pacing, easings, staging, or animation style.
 - Easing Anchors
 - Choreography
 - Reveal Grammar
+- Chapterization And Transition Grammar
 - Motion Economy
 - Typography Choreography
 - Data And Figure Motion
@@ -81,9 +82,10 @@ by what it is doing this beat. Bezier is `x1,y1,x2,y2`.
   Count-up: near-linear digits, `settle-soft` landing. Mask-wipe: `entrance-sharp`,
   revealed content `settle-soft`.
 - Hard cut / jump cut / chapter transition: outgoing `exit-accelerate` (or
-  `travel-cut` for long travel) cut before it settles; pair with a motion-masked
-  swap when continuity matters. Loop reset: match first/last velocity; use a
-  visible reset only via `exit-accelerate`+cut.
+  `travel-cut` for long travel), cut before it settles; pair with a motion-masked
+  swap when continuity matters — see Chapterization And Transition Grammar.
+- Loop reset: match first/last velocity; use a visible reset only via
+  `exit-accelerate`+cut.
 - Overshoot: small, premium-off by default. Prefer a settle-back keyframe (past
   the target, then ease back — Skottie-safe); end `i.y` ~1.08 to 1.2 is the
   compact alternative.
@@ -114,6 +116,23 @@ by what it is doing this beat. Bezier is `x1,y1,x2,y2`.
   uniform opacity fades for premium scenes.
 - One scene or beat should have one main flourish. Too many reveals in the same
   beat weakens hierarchy.
+
+## Chapterization And Transition Grammar
+
+- Gate: if the prompt carries more than one idea (long text, lists, multiple
+  stats, timeline, before/after, problem/solution, quote+proof, walkthrough,
+  recap/story, multi-language or repeating variations), split it into chapters
+  instead of cramming one scene. A single-purpose beat (logo lockup, one CTA, one
+  stat, legal/read-critical, calm hero that must settle) stays one beat and lands.
+- Give each chapter one readable job, and let the main message get a coast or
+  hold before any seam.
+- Choose each transition by seam purpose — preserve continuity, create contrast,
+  reset rhythm, or land a point — not at random. A transition is chapter role +
+  timing + direction + cut point + masking + easing, not easing alone.
+- For dense/multi-part prompts, read
+  `references/chapterization-transition-grammar.md` for the full when/when-not,
+  roles, structure modes, transition grammar, selection, cut-on-action mechanics,
+  easing-anchor support, and guardrails.
 
 ## Motion Economy
 
