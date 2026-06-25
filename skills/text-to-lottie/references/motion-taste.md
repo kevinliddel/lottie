@@ -6,7 +6,7 @@ Use this reference when choosing pacing, easings, staging, or animation style.
 
 - Principles
 - Timing Defaults
-- Easing Intent
+- Easing Anchors
 - Choreography
 - Reveal Grammar
 - Motion Economy
@@ -41,20 +41,54 @@ Use this reference when choosing pacing, easings, staging, or animation style.
 - Product/social promos: 90-180 frames for one clear message.
 - Loaders/icons: loop cleanly over 60-120 frames.
 
-## Easing Intent
+## Easing Anchors
 
-- Clean ease-out: quick start, soft settle. Good for entrances and UI.
-- Ease-in-out: balanced movement between two visible states.
-- Back/overshoot: use sparingly for confirmation, playful icons, and brand
-  accents; keep overshoot small for premium work.
-- No-bounce ease-out: use for serious product, enterprise, data, finance, and
-  institutional scenes.
-- Squash/overshoot: use only when playful, social, brand, or character tone is
-  appropriate.
-- Anticipate: pull slightly opposite the main action before a fast reveal.
-- Steps/holds: good for typewriter, counters, scans, and technical beats.
-- Continuous linear: use for rotations, scanners, progress loops, and mechanical
-  motion where a seam would be visible.
+Known-good defaults to **derive from**, not a closed preset list. Anchors
+describe motion **behavior** (entering, settling, traveling, exiting, looping,
+cut companion), not layer type: a logo, hero, title, card, or accent each picks
+by what it is doing this beat. Bezier is `x1,y1,x2,y2`.
+
+| anchor | behavior | cubic-bezier | feel |
+| --- | --- | --- | --- |
+| `entrance-sharp` | entering, mask-wipe decel | `.20,.75,.34,.94` | fast in, soft land |
+| `settle-soft` | settling, count-up landing, logo lockup | `.00,.65,.51,.99` | deep ease-out, no bounce |
+| `kinetic-ui` | expressive small state move (toggle, accent) | `.85,.46,.14,.53` | lively — not every UI move |
+| `expressive-pop` | active kinetic word, brand flourish | `.94,.75,.34,.94` | fast-out + soft settle (overshoot opt-in) |
+| `travel-balanced` | object travel, camera, state-to-state | `1.00,.49,.00,.55` | S-curve ease-in-out |
+| `exit-accelerate` | exiting, hard-cut companion | `1.00,.02,.54,.42` | slow start, fast end |
+| `travel-cut` | only interrupted / masked / cut-before-settle | `.15,.85,.95,.05` | fast-slow-fast, never settles |
+
+- Derive, don't invent: start from the nearest anchor and adjust one quality —
+  acceleration, coast, landing softness, exit speed, overshoot. Reach for a new
+  curve only when no anchor fits.
+- Per-property orchestration: choose *how* properties coordinate, not just which
+  easing each uses — match the method to the motion character. *Locked*
+  (start/end together) for UI, panels, buttons, mechanical/synced state.
+  *Lead/follow* (one property leads a few frames, another follows) for
+  logo/hero/organic, where position, scale, rotation, opacity, masks, trim, or
+  number changes may use different curves, start/end frames, or durations.
+  *Primary/secondary* (one property carries the motion, others support subtly).
+  *Early-opacity/late-settle* (opacity resolves fast while position/scale keeps
+  settling, for readability). *Single-property overshoot* (only scale or
+  rotation overshoots, position stays controlled).
+- Hierarchy: only the focal element gets the strongest personality
+  (`expressive-pop`, overshoot, snap); support uses quieter anchors
+  (`settle-soft`, `travel-balanced`).
+- Distance/duration: large travel → smoother acceleration and more time (don't
+  snap); tiny UI → short, not theatrical; camera → calmer than the objects in it.
+- Typography: support `settle-soft`; active word `expressive-pop`/`entrance-sharp`.
+  Count-up: near-linear digits, `settle-soft` landing. Mask-wipe: `entrance-sharp`,
+  revealed content `settle-soft`.
+- Hard cut / jump cut / chapter transition: outgoing `exit-accelerate` (or
+  `travel-cut` for long travel) cut before it settles; pair with a motion-masked
+  swap when continuity matters. Loop reset: match first/last velocity; use a
+  visible reset only via `exit-accelerate`+cut.
+- Overshoot: small, premium-off by default. Prefer a settle-back keyframe (past
+  the target, then ease back — Skottie-safe); incoming `y` ~1.08–1.2 is the
+  compact alternative.
+- Also useful: anticipate (pull slightly opposite before a fast reveal),
+  steps/holds (typewriter, counters, scans, technical beats), and continuous
+  linear (rotations, scanners, progress loops, mechanical seams).
 
 ## Choreography
 

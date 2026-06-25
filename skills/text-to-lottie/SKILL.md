@@ -112,7 +112,10 @@ These few defaults are non-negotiable and apply to every designed scene. Load
   thirds, and SVG-derived assets unless the user asks for a background.
 - Include top-level `v`, `fr`, `ip`, `op`, `w`, `h`, `nm`, `assets`, and
   `layers`. Treat `op` as exclusive.
-- Use purposeful easing and staging. Avoid defaulting to linear motion.
+- Use purposeful easing and staging. Avoid defaulting to linear motion. Derive
+  easing from the behavior-based anchors in `motion-taste.md` (chosen by motion
+  behavior, focal element strongest); do not fall back to one uniform ease for
+  every layer.
 - Use slots for important editable values and add `controls.json` labels/ranges
   when they improve the properties panel.
 - For SVG input, preserve the viewBox, normalize styling, watch fill rules and

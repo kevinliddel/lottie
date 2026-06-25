@@ -29,6 +29,12 @@ Upstream specs:
 - Color values are RGB or RGBA floats in `0..1`; opacity values are `0..100`.
 - Easing handle `x` values are `0..1`; `y` values may exceed that range for
   controlled overshoot.
+- A cubic-bezier `(x1,y1,x2,y2)` splits across two keyframes: it is the
+  **outgoing** handle of the start keyframe `o:{x:[x1],y:[y1]}` and the
+  **incoming** handle of the end keyframe `i:{x:[x2],y:[y2]}`.
+- Overshoot: prefer a short settle-back keyframe past the target; the compact
+  alternative is pushing the end `i.y` above 1. Anticipation: push the start
+  `o.y` below 0.
 
 ## Layers
 
