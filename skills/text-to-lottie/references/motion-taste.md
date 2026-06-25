@@ -28,8 +28,9 @@ Use this reference when choosing pacing, easings, staging, or animation style.
 - Match easing to intent. Functional UI needs speed and clarity; brand motion can
   hold longer; playful effects can overshoot more.
 - Avoid linear interpolation unless mechanical motion is the intent.
-- Avoid generic easing where every property starts and stops together. Offset
-  opacity, position, scale, and trim timing so the motion has choreography.
+- Avoid generic easing where every property shares the same timing by default.
+  Use locked timing for rigid/UI-stable motion, and offset opacity, position,
+  scale, or trim timing only when it improves choreography.
 
 ## Timing Defaults
 
@@ -84,7 +85,7 @@ by what it is doing this beat. Bezier is `x1,y1,x2,y2`.
   swap when continuity matters. Loop reset: match first/last velocity; use a
   visible reset only via `exit-accelerate`+cut.
 - Overshoot: small, premium-off by default. Prefer a settle-back keyframe (past
-  the target, then ease back — Skottie-safe); incoming `y` ~1.08–1.2 is the
+  the target, then ease back — Skottie-safe); end `i.y` ~1.08 to 1.2 is the
   compact alternative.
 - Also useful: anticipate (pull slightly opposite before a fast reveal),
   steps/holds (typewriter, counters, scans, technical beats), and continuous

@@ -22,8 +22,8 @@ Upstream specs:
 - Static properties use `{ "a": 0, "k": value }`.
 - Animated properties use `{ "a": 1, "k": [keyframes] }`.
 - Keyframes must be sorted by ascending `t`.
-- Non-hold keyframes should include `o` and `i` handles except for the final
-  keyframe.
+- Non-hold interpolation should put `o` on the start keyframe and `i` on the
+  destination keyframe; the final keyframe does not need an outgoing `o`.
 - Scalar animated values use arrays in keyframes, for example `"s": [45]` for
   rotation or opacity.
 - Color values are RGB or RGBA floats in `0..1`; opacity values are `0..100`.
